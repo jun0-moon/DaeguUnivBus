@@ -1,0 +1,184 @@
+/* 1. 기본 설정 및 변수 선언 */
+:root {
+  --primary-color: #00C853; /* 밝은 녹색 (현대적인 느낌) */
+  --primary-dark: #009624;
+  --accent-color: #2979FF; /* 포인트 블루 */
+  --bg-color: #F0F2F5; /* 연한 회색 배경 */
+  --card-bg: #FFFFFF;
+  --text-main: #333333;
+  --text-sub: #666666;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-bottom: 80px; /* 푸터 공간 확보 */
+}
+
+/* 2. 헤더 (그라데이션 & 깔끔한 배치) */
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.btn-refresh {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.btn-refresh:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 3. 네비게이션 (토글 버튼 스타일) */
+nav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  padding: 0 20px;
+}
+
+.direction-toggle {
+  background-color: #e0e0e0;
+  padding: 4px;
+  border-radius: 30px;
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+}
+
+.direction-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 0;
+  border-radius: 24px;
+  color: var(--text-sub);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.direction-toggle button.active {
+  background-color: white;
+  color: var(--primary-dark);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 4. 메인 컨텐츠 & 스케줄 카드 (핵심 디자인) */
+main {
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.schedule-item {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.schedule-item h3 {
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  border-left: 4px solid var(--primary-color);
+  padding-left: 10px;
+}
+
+.schedule-info {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.schedule-info p {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.schedule-info .note {
+  color: var(--accent-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* 5. 시간표 그리드 디자인 */
+.time-table h4 {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  margin-bottom: 10px;
+}
+
+.time-table ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* 반응형 그리드 */
+  gap: 10px;
+}
+
+.time-table li {
+  background-color: #E3F2FD; /* 연한 블루 */
+  color: #1565C0;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.time-table li:hover {
+  transform: translateY(-2px);
+  background-color: #BBDEFB;
+}
+
+/* 6. 푸터 */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 0.8rem;
+}
