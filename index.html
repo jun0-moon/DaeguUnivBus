@@ -8,51 +8,37 @@
   </head>
   <body>
     <header>
-      <!-- 새로고침 버튼 넣기 -->
       <h1>대구대 통학버스</h1>
-      <button class="btn-refresh" aria-label="새로고침">새로고침</button>
+      <button class="btn-refresh" aria-label="새로고침" onclick="window.location.reload()">새로고침</button>
     </header>
 
-    <nav>
-      <!-- 검색 및 필터 영역 -->
-      <div class="direction-toggle">
-        <button class="active">하양</button>
-        <button>임당</button>
-      </div>
-    </nav>
-
     <main>
-      <!-- 버스 시간표 및 현황 리스트 영역 -->
-      <!-- 현재 상태 바-->
       <section id="info-bar"></section>
 
-      <!-- 버스 시간 리스트 -->
-      <section id="schedule-list">
-        <div class="schedule-item">
-          <h3>하양역 하교 (9회)</h3>
-          <div class="schedule-info">
-            <p><strong>탑승 장소:</strong> 인문 2관 앞 주차장 1호선 승강장</p>
-            <p class="note">※ 하양역 맞은편 하이마트 앞</p>
-          </div>
-        <div class="time-table">
-          <h4>운행 시간</h4>
-            <ul>
-              <li>16:00</li>
-              <li>16:30</li>
-              <li>16:45</li>
-              <li>17:00</li>
-              <li>17:10</li>
-              <li>17:20</li>
-              <li>17:30</li>
-              <li>18:00</li>
-              <li>18:30</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <section id="schedule-list"></section>
 
-      <!-- 버스 좌석 현황 -->
-      <section id="bus-card"></section>
+      <section id="bus-card" class="hidden">
+        <div class="seat-header">
+          <h3 id="selected-time-title">좌석 선택</h3>
+          <button class="close-btn" onclick="closeSeatMap()">✕</button>
+        </div>
+        
+        <div class="driver-area">
+          <div class="driver-seat">운전석</div>
+        </div>
+
+        <p class="warning-text">* 예약한 좌석번호에 승차바랍니다.</p>
+        
+        <div id="seat-grid"></div>
+
+        <div class="seat-legend">
+          <span class="legend-item"><span class="box available"></span>가능</span>
+          <span class="legend-item"><span class="box selected"></span>선택</span>
+          <span class="legend-item"><span class="box occupied"></span>예약됨</span>
+        </div>
+
+        <button class="btn-reserve" onclick="alert('예약이 완료되었습니다!')">좌석 예약하기</button>
+      </section>
     </main>
 
     <footer>
@@ -63,5 +49,109 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      // 1. 버스 시간표 데이터
+      const scheduleData = [
+        "16:00", "16:30", "16:45", "17:00", 
+        "17:10", "17:20", "17:30", "18:00", "18:30"
+      ];
+
+      // 2. 시간표 생성 함수 (시간 흐름 반영)
+      function updateSchedule() {
+        const now = new Date();
+        const currentTimeValue = now.getHours() * 60 + now.getMinutes(); 
+
+        const container = document.getElementById('schedule-list');
+        
+        let html = `
+          <div class="schedule-item">
+            <h3>하양역 하교 <span class="badge">9회 운행</span></h3>
+            <div class="schedule-info">
+              <p><strong>탑승 장소:</strong> 인문 2관 앞 주차장 1호선 승강장</p>
+              <p class="note">※ 하양역 맞은편 하이마트 앞</p>
+            </div>
+            <div class="time-grid">
+        `;
+
+        let nextBusFound = false;
+
+        scheduleData.forEach(time => {
+          const [h, m] = time.split(':').map(Number);
+          const busTimeValue = h * 60 + m;
+          
+          let statusClass = '';
+          let statusText = '';
+
+          if (currentTimeValue > busTimeValue) {
+            statusClass = 'past';
+            statusText = '종료';
+          } else {
+            if (!nextBusFound) {
+              statusClass = 'next';
+              const diff = busTimeValue - currentTimeValue;
+              statusText = `${diff}분 전`;
+              nextBusFound = true;
+            } else {
+              statusClass = 'future';
+            }
+          }
+
+          // 클릭 이벤트 추가 (onclick)
+          html += `
+            <div class="time-slot ${statusClass}" onclick="openSeatMap('${time}')">
+              <span class="time">${time}</span>
+              ${statusText ? `<span class="status">${statusText}</span>` : ''}
+            </div>
+          `;
+        });
+
+        html += `</div></div>`;
+        container.innerHTML = html;
+      }
+
+      // 3. 좌석표 열기 (44석 생성)
+      function openSeatMap(time) {
+        const seatSection = document.getElementById('bus-card');
+        const grid = document.getElementById('seat-grid');
+        const title = document.getElementById('selected-time-title');
+        
+        title.innerText = `${time} 버스 좌석`;
+        seatSection.classList.remove('hidden');
+        
+        // 부드럽게 스크롤 이동
+        setTimeout(() => {
+            seatSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+
+        // 좌석 초기화 및 생성
+        grid.innerHTML = '';
+        for (let i = 1; i <= 44; i++) {
+          const seatBtn = document.createElement('button');
+          seatBtn.className = 'seat';
+          seatBtn.innerText = i;
+          
+          // 랜덤 예약 상태 (30% 확률)
+          if (Math.random() < 0.3) {
+            seatBtn.classList.add('occupied');
+            seatBtn.disabled = true;
+          } else {
+            seatBtn.onclick = function() {
+              this.classList.toggle('selected');
+            };
+          }
+          grid.appendChild(seatBtn);
+        }
+      }
+
+      // 4. 좌석표 닫기
+      function closeSeatMap() {
+        document.getElementById('bus-card').classList.add('hidden');
+      }
+
+      // 실행 및 자동 갱신
+      updateSchedule();
+      setInterval(updateSchedule, 60000);
+    </script>
   </body>
 </html>

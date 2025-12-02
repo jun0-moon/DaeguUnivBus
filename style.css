@@ -1,0 +1,208 @@
+/* 1. 기본 설정 */
+:root {
+  --primary-color: #00C853;
+  --primary-dark: #009624;
+  --accent-color: #2979FF;
+  --bg-color: #F0F2F5;
+  --card-bg: #FFFFFF;
+  --text-main: #333333;
+  --text-sub: #666666;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-bottom: 80px;
+}
+
+/* 2. 헤더 */
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+}
+
+header h1 { font-size: 1.4rem; font-weight: 700; }
+
+.btn-refresh {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
+/* 3. 네비게이션 */
+nav { display: flex; justify-content: center; margin-bottom: 24px; padding: 0 20px; }
+.direction-toggle {
+  background-color: #e0e0e0; padding: 4px; border-radius: 30px;
+  display: flex; width: 100%; max-width: 320px;
+}
+.direction-toggle button {
+  flex: 1; border: none; background: transparent; padding: 10px 0;
+  border-radius: 24px; color: var(--text-sub); font-weight: 600; cursor: pointer;
+}
+.direction-toggle button.active {
+  background-color: white; color: var(--primary-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 4. 메인 컨텐츠 공통 */
+main { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+
+/* 5. 시간표 스타일 */
+#schedule-list { display: flex; flex-direction: column; gap: 20px; }
+
+.schedule-item {
+  background-color: var(--card-bg); border-radius: var(--radius-lg);
+  padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);
+}
+
+.schedule-item h3 {
+  color: var(--primary-dark); margin-bottom: 12px; font-size: 1.2rem;
+  border-left: 4px solid var(--primary-color); padding-left: 10px;
+}
+
+.badge {
+  background-color: var(--primary-color); color: white; font-size: 0.7rem;
+  padding: 2px 8px; border-radius: 12px; vertical-align: middle; margin-left: 8px; font-weight: normal;
+}
+
+.schedule-info {
+  background-color: #f8f9fa; padding: 12px; border-radius: var(--radius-md); margin-bottom: 20px;
+}
+.schedule-info p { font-size: 0.95rem; margin-bottom: 4px; }
+.schedule-info .note { color: var(--accent-color); font-size: 0.85rem; font-weight: 600; margin-top: 6px; }
+
+/* 시간표 그리드 */
+.time-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 12px;
+}
+.time-slot {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background-color: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 4px;
+  text-align: center; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.time-slot .time { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+.time-slot .status { font-size: 0.75rem; margin-top: 4px; color: var(--text-sub); }
+
+/* 시간표 상태별 스타일 */
+.time-slot.past { background-color: #f5f5f5; border-color: transparent; }
+.time-slot.past .time { color: #bbb; text-decoration: line-through; }
+.time-slot.past .status { color: #aaa; }
+
+.time-slot.next {
+  background-color: var(--primary-color); border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4); transform: translateY(-4px); animation: pulse 2s infinite;
+}
+.time-slot.next .time { color: white; }
+.time-slot.next .status { color: #fff; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 200, 83, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0); }
+}
+
+/* 6. 좌석표 (Bus Card) 스타일 */
+.hidden { display: none; }
+
+#bus-card {
+  background: white; 
+  border-radius: 20px; 
+  padding: 24px 20px; 
+  margin-top: 20px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15); 
+  animation: slideUp 0.4s ease-out;
+  border: 1px solid #eee;
+  text-align: center; /* 전체 가운데 정렬 */
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.seat-header { 
+  display: flex; justify-content: space-between; align-items: center; 
+  margin-bottom: 20px; padding: 0 10px;
+}
+.seat-header h3 { font-size: 1.2rem; color: var(--text-main); }
+.close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+
+/* 운전석 영역 */
+.driver-area { 
+  display: flex; max-width: 320px; margin: 0 auto 15px; 
+}
+.driver-seat {
+  background-color: #90CAF9; color: white; padding: 8px 16px;
+  border-radius: 8px; font-weight: bold; font-size: 0.9rem;
+}
+
+.warning-text { 
+  color: #FF9800; font-size: 0.8rem; margin-bottom: 20px; display: block;
+}
+
+/* 2열-통로-2열 그리드 (가운데 정렬 + 정사각형) */
+#seat-grid {
+  display: grid; 
+  grid-template-columns: 1fr 1fr 40px 1fr 1fr; 
+  gap: 10px; 
+  margin: 0 auto 20px; 
+  max-width: 320px;
+}
+
+.seat {
+  aspect-ratio: 1 / 1; /* 정사각형 유지 */
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #ddd; background-color: white;
+  border-radius: 10px; font-size: 1rem; font-weight: 500; color: #333;
+  cursor: pointer; transition: all 0.2s;
+}
+
+/* 3번째, 7번째... (각 줄의 3번째 요소)를 4번째 칸으로 밀어서 통로 생성 */
+.seat:nth-child(4n+3) { grid-column-start: 4; }
+
+.seat.selected {
+  background-color: var(--accent-color); color: white; border-color: var(--accent-color);
+  box-shadow: 0 4px 10px rgba(41, 121, 255, 0.3);
+}
+.seat.occupied { background-color: #E0E0E0; color: #BDBDBD; cursor: not-allowed; border: none; }
+
+.seat-legend { 
+  display: flex; justify-content: center; gap: 15px; margin-bottom: 24px; 
+  font-size: 0.85rem; color: #666; 
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-item .box { width: 14px; height: 14px; border-radius: 4px; }
+.box.available { border: 1px solid #ccc; background: white; }
+.box.selected { background: var(--accent-color); }
+.box.occupied { background: #E0E0E0; }
+
+.btn-reserve {
+  width: 100%; max-width: 320px; padding: 16px; 
+  background-color: var(--accent-color); color: white;
+  border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; 
+  cursor: pointer; margin: 0 auto; display: block;
+}
+.btn-reserve:hover { background-color: #1565C0; }
+
+/* 7. 푸터 */
+footer { text-align: center; padding: 40px 20px; color: #999; font-size: 0.8rem; }
